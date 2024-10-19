@@ -1,0 +1,21 @@
+package com.example.shop;
+
+import jakarta.persistence.*;
+
+// 이거 붙이면
+@Entity 
+public class Item { // 이런 이름으로 테이블 하나 생성해줌
+    // JPA 라이브러리 덕분에 가능한 것
+
+    @Id // <- 인덱스 컬럼에는 이거 붙이라고 강요함
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // <- 알아서 1씩 증가시켜서 넣어줌
+    public Long id;
+
+    //    @Column(nullable = false) // 이 줌
+    //    @Column(length = 1000) // String 기본은 255 length 지정하면 직접 지컬럼 비어있으면 테이블에 입력막아주세요.
+    //    //    @Column(unique = true) // 이 컬럼값이 유니크하지 않으면 테이블 입력막아정 가능
+
+    public String title; // 상품명
+    // 컬럼용 변수에는 int 말고 Integer 강요함
+    public Integer price; // 가격
+}

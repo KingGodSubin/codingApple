@@ -25,7 +25,7 @@ public class BasicController {
         return "나는 김수빈이야"; // <- 이거 보내주세요~
     }
 
-    @GetMapping("/mypage") // <- 누가 /about으로 접속하면
+    @GetMapping("/mypage") // <- 누가 /mypage으로 접속하면
     @ResponseBody
     public String mypage(){
         return "마이페이지입니다~"; // <- 이거 보내주세요~
@@ -39,4 +39,5 @@ public class BasicController {
 
         return "현재시간은 " + nowTime + "\n현재 날짜는 : " + nowDate + "입니다.";
     }
+
 }
