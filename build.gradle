@@ -35,6 +35,9 @@ dependencies {
 	// JPA : Java의 ORM 표준 문법
 	// Hibernate : JPA를 쓰기좋게 구현한거
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
