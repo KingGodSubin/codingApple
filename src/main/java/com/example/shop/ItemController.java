@@ -5,8 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,7 +34,24 @@ public class ItemController {
         model.addAttribute("items", items);
 //        model.addAttribute("전달할데이터이름", 데이터)
         model.addAttribute("name", "비싼 바지");
-        return "list.html";
+        return "list";
+    }
+
+    @GetMapping(value = "/write")
+    public String write(Item item){
+        return "write";
+    }
+
+    @PostMapping(value = "/add")
+    // @RequestParam Map formData => input 100개면 100개를 Map 자료형으로 담아줌
+    public String add(Item item){
+        itemRepository.save(item);
+//        var test = new HashMap<>();
+//        test.put("name", "kim");
+//        test.put("age", 20);
+//        System.out.println(test);
+        // 특정페이지로 돌아가게 만들 수 있음(redirect)
+        return "redirect:/list";
     }
     // HTML에 서버데이터 넣어서 보내주려면
     // 1. Model model 추가

@@ -16,7 +16,7 @@ public class BasicController {
     @GetMapping("/")
 //    @ResponseBody <- 문자 그대로 보내주세요
     public String viewMain(){
-        return "index.html";
+        return "index";
     };
 
     @GetMapping("/about") // <- 누가 /about으로 접속하면
