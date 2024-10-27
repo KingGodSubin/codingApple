@@ -1,0 +1,11 @@
+<!-- Thymeleaf를 설치해서 쓰는 경우에는 그냥 error.html 만들어두면 -->
+<!-- 서버에서 에러가 발생하면 그 페이지로 자동으로 이동됩니다. -->
+
+<h4>에러페이지임</h4>
+
+<p th:text="${status}"></p>
+<p th:text="${error}"></p>
+<p th:text="${path}"></p>
+<p th:text="${message}"></p>
+<p th:text="${exception}"></p>
+
