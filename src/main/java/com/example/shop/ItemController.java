@@ -16,8 +16,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemController {
 
-
     private final ItemRepository itemRepository;
+
+    private final ItemService itemService;
 
     //    Lombok 없이 등록하려면
 //    @Autowired
@@ -45,8 +46,19 @@ public class ItemController {
     @PostMapping(value = "/add")
     // @RequestParam Map formData => input 100개면 100개를 Map 자료형으로 담아줌
     // @ModelAttribute Item item => <input> 데이터들을 바로 object로 변환하려면
-    public String addPost(Item item) {
-        itemRepository.save(item);
+    public String addPost(String title, Integer price) {
+        // 하나의 함수엔 하나의 기능만 담는게 좋다했다
+        // 이 addPost 함수에선 다른 페이지로 redirect 시키는 기능과 DB 입출력 기능 두가지 존재
+//        Item item = new Item();
+//        item.setTitle(title);
+//        item.setPrice(price);
+//        itemRepository.save(item);
+        
+//        new ItemService().SaveItem(title, price);
+//        다른 class의 함수를 사용할 때 new Class().함수()는 비추천임
+//        이유는 /add를 통해 상품 100만개를 넣을 경우 100만개의 object 생성됨
+//        다른데서 미리 new Class() 해놓고 재사용하는게 좋음(스프링한테 시키면 해줌)
+        itemService.SaveItem(title,price);
 //        var test = new HashMap<>();
 //        test.put("name", "kim");
 //        test.put("age", 20);
@@ -81,4 +93,16 @@ public class ItemController {
     // 1. repository 만들기
     // 2. 원하는 클래스에 repository 등록
     // 3. repository.입출력문법() 쓰기
+    
+    // 함수 하나에는 한가지 기능만 담는걸 권장
+    // 하나의 클래스엔 비슷한 기능의 함수들만 보관하는게 좋음
+
+    // 의존성 주입(Dependency Injection)
+    // 1. new Class() 할 클래스에서 @Service
+    // 2. 사용할 곳에서 변수로 등록하기
+    // 3. 변수사용
+
+    // Dependency Injection 왜 하는 것임?
+    // 1. object 여러개 안뽑아도 되어서 효율적임
+    // 2. 클래스간의 커플링을 줄일 수 있음
 }
