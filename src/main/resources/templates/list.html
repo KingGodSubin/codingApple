@@ -23,7 +23,8 @@
     <div>
         <h4 th:text="${item.title}">바지</h4>
         <a th:href="@{'/detail/' + ${item.id}}">링크</a>
-        <p th:text="${item.price}">7억</p>
+        <p th:text="${item.price} + 원">7억</p>
+        <a th:href="@{/edit/{itemId}(itemId=${item.id})}">✏️</a>
     </div>
 </div>
 </body>
