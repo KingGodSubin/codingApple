@@ -1,13 +1,11 @@
-package com.example.shop;
+package com.example.shop.item;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -94,6 +92,20 @@ public class ItemController {
         itemService.editItemService(item);
         return "redirect:/list";
     }
+
+    @PostMapping("/test1")
+    public String test(@RequestBody Map<String, Object> body) {
+        System.out.println(body.get("name"));
+        return "redirect:/list";
+    }
+
+    @DeleteMapping("/item")
+    // query string으로 보낸 데이터 출력은 ? @RequestParam
+    public ResponseEntity<String> deleteItem(@RequestParam Long itemId){
+        itemRepository.deleteById(itemId);
+        return ResponseEntity.status(200).body("삭제완료");
+    }
+
     // HTML에 서버데이터 넣어서 보내주려면
     // 1. Model model 추가
     // 2. model.addAttribute(작명, 데이터)
@@ -115,4 +127,16 @@ public class ItemController {
     // Dependency Injection 왜 하는 것임?
     // 1. object 여러개 안뽑아도 되어서 효율적임
     // 2. 클래스간의 커플링을 줄일 수 있음
+
+    // 서버로 요청날리는 법
+    // 1. 주소창에 URL 적기(GET)
+    // 2. <form> 전송 (GET, POST)
+    // 3. AJAX(GET, POST, PUT, DELETE 등) 
+    // AJAX : 새로고침없이 서버로 요청날리는 자바스크립트 코드
+    // AJAX 장점 : 새로고침 없이 요청가능
+
+    // 새로 배운거
+    // 1. 새로고침 없이 요청날리고 데이터 받아오려면 AJAX
+    // 2. query string, URL parameter 써도 서버로 데이터 전송가능
+    // 3. 자바스크립트 안에 Thymeleaf 변수 넣기 가능
 }

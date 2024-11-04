@@ -25,7 +25,24 @@
         <a th:href="@{'/detail/' + ${item.id}}">링크</a>
         <p th:text="${item.price} + 원">7억</p>
         <a th:href="@{/edit/{itemId}(itemId=${item.id})}">✏️</a>
+        <!-- 자바스크립트에 Thymeleaf 변수 넣으려면 -->
+        <!-- .then() 붙이면 AJAX 요청 완료시 코드실행가능  -->
+        <span th:onclick="fetch('/item?itemId=[[${item.id}]]', {method : 'DELETE'})
+            .then(r => r.text())
+            .then(() => {
+                location.reload();
+            })
+        ">🗑️</span>
     </div>
 </div>
+<script>
+    document.querySelectorAll('.btn')[0].addEventListener("click", function () {
+        fetch('/test1', {  // 여기 url로
+            method : 'post', // POST 요청이 날라가는데
+            headers : { 'Content-Type' : 'application/json' },
+            body : JSON.stringify({name : 'kim'}) // 이 데이터를 들고 날라감
+        })
+    })
+</script>
 </body>
 </html>
