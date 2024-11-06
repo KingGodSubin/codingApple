@@ -47,6 +47,7 @@ public class MemberController {
     @GetMapping("/my-page")
     // Authentication auth로 추가만 해주면 현재 로그인된 사용자의 정보가 다 들어가 있음
     public String myPage(Authentication auth){
+        System.out.println(auth.getName());
         CustomUser result = (CustomUser) auth.getPrincipal();
         System.out.println(result.displayName);
         // 현재 로그인 여부

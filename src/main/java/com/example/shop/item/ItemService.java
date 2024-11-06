@@ -31,10 +31,10 @@ public class ItemService {
 //        editItem.get().setTitle(item.getTitle());
 //        editItem.get().setPrice(item.getPrice());
 //        itemRepository.save(editItem.get());
-        Item realEditItem = new Item();
-        realEditItem.setId(item.getId());
-        realEditItem.setTitle(item.getTitle());
-        realEditItem.setPrice(item.getPrice());
-        itemRepository.save(realEditItem);
+//        Item realEditItem = new Item();
+//        realEditItem.setId(item.getId());
+//        realEditItem.setTitle(item.getTitle());
+//        realEditItem.setPrice(item.getPrice());
+        itemRepository.save(item);
     }
 }
