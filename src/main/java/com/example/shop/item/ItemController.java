@@ -2,6 +2,7 @@ package com.example.shop.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class ItemController {
     @PostMapping(value = "/add")
     // @RequestParam Map formData => input 100개면 100개를 Map 자료형으로 담아줌
     // @ModelAttribute Item item => <input> 데이터들을 바로 object로 변환하려면
-    public String addPost(String title, Integer price) {
+    public String addPost(Authentication auth, String title, Integer price) {
         // 하나의 함수엔 하나의 기능만 담는게 좋다했다
         // 이 addPost 함수에선 다른 페이지로 redirect 시키는 기능과 DB 입출력 기능 두가지 존재
 //        Item item = new Item();
@@ -56,7 +57,7 @@ public class ItemController {
 //        다른 class의 함수를 사용할 때 new Class().함수()는 비추천임
 //        이유는 /add를 통해 상품 100만개를 넣을 경우 100만개의 object 생성됨
 //        다른데서 미리 new Class() 해놓고 재사용하는게 좋음(스프링한테 시키면 해줌)
-        itemService.saveItem(title,price);
+        itemService.saveItem(auth.getName(), title, price);
 //        var test = new HashMap<>();
 //        test.put("name", "kim");
 //        test.put("age", 20);

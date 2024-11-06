@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 // 아무 클래스에나 이 두 어노테이션을 붙이면 스프링 시큐리티 설정을 만질 수 있음
 @Configuration
@@ -18,9 +20,24 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // 다른 사이트에서 내 사이트를 원격으로 조작하는걸 막고싶다!
+    //추가
+//    @Bean
+//    public CsrfTokenRepository csrfTokenRepository() {
+//        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+//        repository.setHeaderName("X-XSRF-TOKEN");
+//        return repository;
+//    }
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http.csrf((csrf) -> csrf.disable());
+
+//        http.csrf(csrf -> csrf.csrfTokenRepository(csrfTokenRepository())
+//                .ignoringRequestMatchers("/login")
+//        );
+
         http.authorizeHttpRequests((authorize) ->
                 // 특정 페이지 로그인 검사 할지 결정 가능
                 // /** 하면 모든 url의 로그인 검사를 일단 해지
@@ -36,6 +53,9 @@ public class SecurityConfig {
                 // 로그인 실패시 갈 url
 //                .failureUrl("/fail")
         );
+
+        // 로그아웃은
+        http.logout(logout -> logout.logoutUrl("/logout"));
 
         return http.build();
     }

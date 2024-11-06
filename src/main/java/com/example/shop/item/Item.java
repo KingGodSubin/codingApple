@@ -24,7 +24,7 @@ public class Item { // 이런 이름으로 테이블 하나 생성해줌
     public String title; // 상품명
     // 컬럼용 변수에는 int 말고 Integer 강요함
     public Integer price; // 가격
-
+    private String username; // 상품을 등록한 유저아이디
 //    // Getter
 //    public String getTitle() {
 //        return title;

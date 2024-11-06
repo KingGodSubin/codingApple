@@ -10,6 +10,9 @@
 </head>
 <body>
 <div th:replace="~{ nav::navbar }"></div>
+
+<h4>로그인하세요</h4>
+
 <!-- param : 현재 URL의 query string 담겨있음 -->
 <div th:if = "${param.error}">
     <h4>아이디나 비번 틀림</h4>
