@@ -1,6 +1,8 @@
 package com.example.shop.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -105,6 +107,17 @@ public class ItemController {
     public ResponseEntity<String> deleteItem(@RequestParam Long itemId){
         itemRepository.deleteById(itemId);
         return ResponseEntity.status(200).body("삭제완료");
+    }
+
+    @GetMapping("/list/page/{pageNumber}")
+    public String getListPage(Model model, @PathVariable Integer pageNumber) {
+
+        Page<Item> result = itemRepository.findPageBy(PageRequest.of(pageNumber-1, 5));
+//        result.getTotalPages(); -> 총 몇개의 페이지가 나오냐?
+        model.addAttribute("items", result);
+//        model.addAttribute("전달할데이터이름", 데이터)
+        model.addAttribute("name", "비싼 바지");
+        return "list";
     }
 
     // HTML에 서버데이터 넣어서 보내주려면

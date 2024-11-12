@@ -6,10 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -56,7 +53,27 @@ public class MemberController {
         return "mypage";
     }
 
+    @GetMapping("/user/1")
+    @ResponseBody
+    public MemberDto getUser(){
+        var a = memberRepository.findById(1L);
+        var result = a.get();
+        var data = new MemberDto();
+        data.username = result.getUsername();
+        data.displayName = result.getDisplayName();
+
+        return data;
+    }
     // @PreAuthorize("isAuthenticated()") <- 로그인 여부
     // @PreAuthorize("isAnonymous()") <- 로그아웃 여부
     // @PreAuthorize("hasAuthority('어쩌구')") <- 권한이 어쩌구면 true 아니면 false
+}
+
+class MemberDto {
+    // DTO : Data Transfer Object(데이터 변환용 클래스)
+    // DTO 장점
+    // 1. 보내는 데이터의 타입체크가 쉬움
+    // 2. 재사용이 쉬움
+    public String username;
+    public String displayName;
 }
