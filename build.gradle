@@ -32,6 +32,10 @@ dependencies {
 	// mysql 접속 도와주는 라이브러리
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	// ORM 라이브러리
+	// 원래 RDBMS는 데이터 입출력시 SQL 써야함
+	// 이게 귀찮고 어려워해서 ORM 씀
+	// 장점 : Java 코드로 데이터 입출력 가능, 뽑은 데이터 타입체크도 편함, 데이터를 Java 스타일로 관리 가능
+	// 단점 : 입출력 속도 저하
 	// JPA : Java의 ORM 표준 문법
 	// Hibernate : JPA를 쓰기좋게 구현한거
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

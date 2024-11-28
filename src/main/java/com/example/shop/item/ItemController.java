@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+// Controller는 보통 데이터나 html 보내는 역활임
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
@@ -40,14 +41,14 @@ public class ItemController {
     }
 
     @GetMapping(value = "/write")
-    public String write(Item item) {
+    public String write() {
         return "write";
     }
 
     @PostMapping(value = "/add")
     // @RequestParam Map formData => input 100개면 100개를 Map 자료형으로 담아줌
     // @ModelAttribute Item item => <input> 데이터들을 바로 object로 변환하려면
-    public String addPost(Authentication auth, String title, Integer price) {
+    public String addPost(Authentication auth, String title, Integer price, Item item) {
         // 하나의 함수엔 하나의 기능만 담는게 좋다했다
         // 이 addPost 함수에선 다른 페이지로 redirect 시키는 기능과 DB 입출력 기능 두가지 존재
 //        Item item = new Item();
@@ -75,6 +76,7 @@ public class ItemController {
         // Q 왜 Optional 써야함?
         // JPA findById() 만든 사람이 쓰라는데요
         Optional<Item> result = itemRepository.findById(itemId);
+        // result 안에 뭐가 들어가 있으면 if문 통과!
         if (result.isPresent()) {
             model.addAttribute("result", result.get());
             return "detail";
@@ -83,7 +85,13 @@ public class ItemController {
         }
 
     }
-
+    
+    // 모든 API의 에러를 캐치하려면
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handler(){
+        return ResponseEntity.status(400).body("니잘못임");
+    }
+    
     @GetMapping(value = "/edit/{itemId}")
     public String edit(Model model, @PathVariable Long itemId){
         itemService.editService(model, itemId);
