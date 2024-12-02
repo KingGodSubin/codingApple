@@ -10,7 +10,7 @@
 </head>
 <body>
 <div th:replace="~{ nav::navbar }"></div>
-<form th:action="@{/edit}" method="post">
+<form action="/edit" method="post">
     <input name="id" th:value="${editItem.id}" type="hidden">
     <input name="title" th:value="${editItem.title}">
     <input name="price" th:value="${editItem.price}">

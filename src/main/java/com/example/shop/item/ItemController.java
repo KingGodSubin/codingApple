@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -107,6 +108,13 @@ public class ItemController {
     @PostMapping("/test1")
     public String test(@RequestBody Map<String, Object> body) {
         System.out.println(body.get("name"));
+        return "redirect:/list";
+    }
+
+    @GetMapping("/test2")
+    String hashing(){
+        var result = new BCryptPasswordEncoder().encode("해싱 할 문자");
+        System.out.println(result);
         return "redirect:/list";
     }
 

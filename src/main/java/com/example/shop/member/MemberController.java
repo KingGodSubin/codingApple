@@ -18,7 +18,8 @@ public class MemberController {
 
     @GetMapping("/register")
     public String register(Authentication auth){
-        if(auth.isAuthenticated()){
+        // auth != null 해주지 않으면 로그아웃 했을때는 auth에 null이 들어가기 때문에 에러 발생!!
+        if(auth != null && auth.isAuthenticated()){
             return "redirect:/list";
         }
         return "register";

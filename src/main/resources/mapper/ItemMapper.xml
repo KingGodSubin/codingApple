@@ -1,6 +1,0 @@
-<mapper namespace="com.example.shop.item.ItemMapper">
-    <insert id="insert" parameterType="com.example.shop.item.Item">
-        INSERT INTO item (title, price, username)
-        VALUES (#{title}, #{price}, #{username})
-    </insert>
-</mapper>

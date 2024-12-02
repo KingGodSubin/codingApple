@@ -40,8 +40,9 @@
     document.querySelectorAll('.btn')[0].addEventListener("click", function () {
         fetch('/test1', {  // 여기 url로
             method : 'post', // POST 요청이 날라가는데
-            headers : { 'Content-Type' : 'application/json' },
+            headers : { 'Content-Type' : 'application/json' }, // json 데이터를 보내겠다
             body : JSON.stringify({name : 'kim'}) // 이 데이터를 들고 날라감
+            // stringify 문자로 변환해주는 함수
         })
     })
 </script>

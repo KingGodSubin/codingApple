@@ -29,6 +29,7 @@ public class SecurityConfig {
 //        return repository;
 //    }
     
+    // SecurityFilterChain 어떤 페이지를 로그인검사할지 설정가능
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -51,6 +52,8 @@ public class SecurityConfig {
                 // 로그인 성공시 갈 url
                 .defaultSuccessUrl("/")
                 // 로그인 실패시 갈 url
+                // 안적으면 기본적으로 /login?error 페이지로 이동
+                // 일종의 query string으로 error가 났다고 알려주는거임
 //                .failureUrl("/fail")
         );
 
