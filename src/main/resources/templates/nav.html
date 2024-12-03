@@ -6,4 +6,7 @@
         <span sec:authentication="principal.username"></span>
         <a href="/logout">로그아웃</a>
     </div>
+    <div sec:authorize="isAnonymous()">
+        <a href="/login">로그인</a>
+    </div>
 </div>

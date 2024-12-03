@@ -8,6 +8,7 @@
     <title>Document</title>
     <!-- 경로를 / 부터 시작하면 static 폴더 파일들 사용 가능 -->
     <link href="/main.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <!-- 별도의 파일에 저장해두고 한 줄로 import 해서 사용가능(th : fragment 문법) -->
@@ -28,21 +29,49 @@
         <a th:href="@{/edit/{itemId}(itemId=${item.id})}">✏️</a>
         <!-- 자바스크립트에 Thymeleaf 변수 넣으려면 -->
         <!-- .then() 붙이면 AJAX 요청 완료시 코드실행가능  -->
-        <span th:onclick="fetch('/item?itemId=[[${item.id}]]', {method : 'DELETE'})
-            .then(r => r.text())
-            .then(() => {
-                location.reload();
-            })
-        ">🗑️</span>
+<!--        <span th:onclick="fetch('/item?itemId=[[${item.id}]]', {method : 'DELETE'})-->
+<!--            .then(r => r.text())-->
+<!--            .then(() => {-->
+<!--                location.reload();-->
+<!--            })-->
+<!--        ">🗑️</span>-->
+        <button id="deleteItem" th:data-item-id="${item.id}">🗑️</button>
     </div>
 </div>
+<!--<div th:each="page : ${#numbers.sequence(1, totalPages)}">-->
+<!--    <div th:text="${page}"></div>-->
+<!--</div>-->
 <script>
-    document.querySelectorAll('.btn')[0].addEventListener("click", function () {
-        fetch('/test1', {  // 여기 url로
-            method : 'post', // POST 요청이 날라가는데
-            headers : { 'Content-Type' : 'application/json' }, // json 데이터를 보내겠다
-            body : JSON.stringify({name : 'kim'}) // 이 데이터를 들고 날라감
-            // stringify 문자로 변환해주는 함수
+
+    // document.querySelectorAll('.btn')[0].addEventListener("click", function () {
+    //     fetch('/test1', {  // 여기 url로
+    //         method : 'post', // POST 요청이 날라가는데
+    //         headers : { 'Content-Type' : 'application/json' }, // json 데이터를 보내겠다
+    //         body : JSON.stringify({name : 'kim'}) // 이 데이터를 들고 날라감
+    //         // stringify 문자로 변환해주는 함수
+    //     })
+    // })
+
+    $('#deleteItem').each(function() {
+        var itemId = $(this).data("item-id");
+        var thisParents = $(this).closest(".card");
+        $(this).click(function ()  {
+            $.ajax({
+                // url은 /delete로 가라
+                url : "/delete",
+                // method는 GET
+                method: "GET",
+                // data는 저런식으로 들고 가라
+                data : {itemId : itemId},
+                // 성공 했을 땐 저 태그 삭제
+                success : function (){
+                    thisParents.remove();
+                },
+                // 실패 했을 땐?
+                fail : function () {
+                    console.log("실패")
+                }
+            })
         })
     })
 </script>

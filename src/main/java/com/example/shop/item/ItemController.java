@@ -118,23 +118,32 @@ public class ItemController {
         return "redirect:/list";
     }
 
-    @DeleteMapping("/item")
-    // query string으로 보낸 데이터 출력은 ? @RequestParam
-    public ResponseEntity<String> deleteItem(@RequestParam Long itemId){
+//    @DeleteMapping("/item")
+//    // query string으로 보낸 데이터 출력은 ? @RequestParam
+//    public ResponseEntity<String> deleteItem(@RequestParam Long itemId){
+//        itemRepository.deleteById(itemId);
+//        return ResponseEntity.status(200).body("삭제완료");
+//    }
+
+    @GetMapping("/delete")
+    @ResponseBody
+    void deleteItem(@RequestParam Long itemId){
         itemRepository.deleteById(itemId);
-        return ResponseEntity.status(200).body("삭제완료");
     }
 
-    @GetMapping("/list/page/{pageNumber}")
-    public String getListPage(Model model, @PathVariable Integer pageNumber) {
 
-        Page<Item> result = itemRepository.findPageBy(PageRequest.of(pageNumber-1, 5));
-//        result.getTotalPages(); -> 총 몇개의 페이지가 나오냐?
-        model.addAttribute("items", result);
-//        model.addAttribute("전달할데이터이름", 데이터)
-        model.addAttribute("name", "비싼 바지");
-        return "list";
-    }
+
+//    @GetMapping("/list/page/{pageNumber}")
+//    public String getListPage(Model model, @PathVariable Integer pageNumber) {
+//
+//        Page<Item> result = itemRepository.findPageBy(PageRequest.of(pageNumber-1, 5));
+////        result.getTotalPages(); -> 총 몇개의 페이지가 나오냐?
+//        model.addAttribute("totalPages", result.getTotalPages());
+//        model.addAttribute("items", result);
+////        model.addAttribute("전달할데이터이름", 데이터)
+//        model.addAttribute("name", "비싼 바지");
+//        return "list";
+//    }
 
     // HTML에 서버데이터 넣어서 보내주려면
     // 1. Model model 추가
