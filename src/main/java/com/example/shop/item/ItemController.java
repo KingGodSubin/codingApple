@@ -32,12 +32,18 @@ public class ItemController {
     // 템플릿엔진 쓰면 서버/Database의 데이터를 HTML에 집어넣을 수 있음.
     // 이걸 API 라고 하는것 같음
     @GetMapping("/list")
-    public String list(Model model) {
-
-        List<Item> items = itemRepository.findAll();
-        model.addAttribute("items", items);
-//        model.addAttribute("전달할데이터이름", 데이터)
-        model.addAttribute("name", "비싼 바지");
+    public String list(Model model, Integer pageIdx) {
+        System.out.println(pageIdx);
+        if(pageIdx == null){
+            pageIdx = 1;
+        }
+        Page<Item> result = itemRepository.findPageBy(PageRequest.of(pageIdx-1, 3));
+        model.addAttribute("totalPages", result.getTotalPages());
+        model.addAttribute("items", result);
+//        List<Item> items = itemRepository.findAll();
+//        model.addAttribute("items", items);
+////        model.addAttribute("전달할데이터이름", 데이터)
+//        model.addAttribute("name", "비싼 바지");
         return "list";
     }
 
@@ -131,11 +137,8 @@ public class ItemController {
         itemRepository.deleteById(itemId);
     }
 
-
-
-//    @GetMapping("/list/page/{pageNumber}")
+//    @PostMapping("/list/page/{pageNumber}")
 //    public String getListPage(Model model, @PathVariable Integer pageNumber) {
-//
 //        Page<Item> result = itemRepository.findPageBy(PageRequest.of(pageNumber-1, 5));
 ////        result.getTotalPages(); -> 총 몇개의 페이지가 나오냐?
 //        model.addAttribute("totalPages", result.getTotalPages());

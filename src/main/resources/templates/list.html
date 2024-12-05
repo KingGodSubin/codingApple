@@ -20,27 +20,32 @@
 <div th:replace="~{ nav.html::navbar }"></div>
 <!--  th: thymeleaf 약자  -->
 <!-- th:each html 쉽게 복붙가능(반복문) -->
-<div class="card" th:each="item : ${items}">
-    <img src="https://placehold.co/300">
-    <div>
-        <h4 th:text="${item.title}">바지</h4>
-        <a th:href="@{'/detail/' + ${item.id}}">링크</a>
-        <p th:text="${item.price} + 원">7억</p>
-        <a th:href="@{/edit/{itemId}(itemId=${item.id})}">✏️</a>
-        <!-- 자바스크립트에 Thymeleaf 변수 넣으려면 -->
-        <!-- .then() 붙이면 AJAX 요청 완료시 코드실행가능  -->
-<!--        <span th:onclick="fetch('/item?itemId=[[${item.id}]]', {method : 'DELETE'})-->
-<!--            .then(r => r.text())-->
-<!--            .then(() => {-->
-<!--                location.reload();-->
-<!--            })-->
-<!--        ">🗑️</span>-->
-        <button id="deleteItem" th:data-item-id="${item.id}">🗑️</button>
+<div id="replace">
+    <div class="card" th:each="item : ${items}">
+        <img src="https://placehold.co/300">
+        <div>
+            <h4 th:text="${item.title}">바지</h4>
+            <a th:href="@{'/detail/' + ${item.id}}">링크</a>
+            <p th:text="${item.price} + 원">7억</p>
+            <a th:href="@{/edit/{itemId}(itemId=${item.id})}">✏️</a>
+            <!-- 자바스크립트에 Thymeleaf 변수 넣으려면 -->
+            <!-- .then() 붙이면 AJAX 요청 완료시 코드실행가능  -->
+            <!--        <span th:onclick="fetch('/item?itemId=[[${item.id}]]', {method : 'DELETE'})-->
+            <!--            .then(r => r.text())-->
+            <!--            .then(() => {-->
+            <!--                location.reload();-->
+            <!--            })-->
+            <!--        ">🗑️</span>-->
+            <button class="deleteItem" th:data-item-id="${item.id}">🗑️</button>
+        </div>
     </div>
 </div>
-<!--<div th:each="page : ${#numbers.sequence(1, totalPages)}">-->
-<!--    <div th:text="${page}"></div>-->
-<!--</div>-->
+<div th:if="${totalPages != 0}">
+    <div class="pagination" th:each="page : ${#numbers.sequence(1, totalPages)}">
+        <button class="eachPage" th:text="${page}" th:data-page-idx="${page}"></button>
+    </div>
+</div>
+
 <script>
 
     // document.querySelectorAll('.btn')[0].addEventListener("click", function () {
@@ -52,28 +57,60 @@
     //     })
     // })
 
-    $('#deleteItem').each(function() {
-        var itemId = $(this).data("item-id");
-        var thisParents = $(this).closest(".card");
-        $(this).click(function ()  {
-            $.ajax({
-                // url은 /delete로 가라
-                url : "/delete",
-                // method는 GET
-                method: "GET",
-                // data는 저런식으로 들고 가라
-                data : {itemId : itemId},
-                // 성공 했을 땐 저 태그 삭제
-                success : function (){
-                    thisParents.remove();
-                },
-                // 실패 했을 땐?
-                fail : function () {
-                    console.log("실패")
-                }
+    // 초기화 시 이벤트 바인딩
+    $(document).ready(function() {
+        bindDeleteButton();
+        bindPaginationButton();
+    });
+
+    // 삭제 버튼 클릭 시
+    function bindDeleteButton() {
+        $('.deleteItem').each(function () {
+            var itemId = $(this).data("item-id");
+            var thisParents = $(this).closest(".card");
+            $(this).click(function () {
+                console.log(itemId + "클릭");
+                $.ajax({
+                    // /delete로 가라
+                    url: "/delete",
+                    // method는 GET 방식(query string)
+                    method: "GET",
+                    // data는 itemid라는 이름으로 들고 가라
+                    data: { itemId: itemId },
+                    // 성공했을땐?
+                    success: function () {
+                        thisParents.remove();
+                    },
+                    // 실패했을땐?
+                    fail: function () {
+                        console.log("실패");
+                    }
+                })
+            });
+        });
+    }
+
+    // 페이지네이션 버튼 클릭 이벤트
+    function bindPaginationButton() {
+        $(".eachPage").each(function () {
+            var pageIdx = $(this).data("page-idx");
+            $(this).click(function () {
+                $.ajax({
+                    url: "/list",
+                    method: "GET",
+                    data: { pageIdx: pageIdx },
+                    success: function (data) {
+                        var data = $.parseHTML(data);
+                        var dataHtml = $("<div>").append(data);
+                        $("#replace").replaceWith(dataHtml.find("#replace"));
+                        // 페이지네이션 버튼 클릭 이벤트 재바인딩
+                        bindDeleteButton();
+                        bindPaginationButton();
+                    }
+                })
             })
-        })
-    })
+        });
+    }
 </script>
 </body>
 </html>
