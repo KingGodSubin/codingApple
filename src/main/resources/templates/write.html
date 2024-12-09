@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="/main.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{ nav::navbar }"></div>
+<form action="/add" method="post" enctype="multipart/form-data">
+    <input name="title">
+    <input name="price">
+    <input name="itemFile" type="file">
+    <button type="submit">버튼</button>
+</form>
+
+
+
+<script>
+    function itemFileUpload(e){
+        console.log(e.files[0])
+    }
+    // async function getURL(e){
+    //     let name = encodeURIComponent(e.files[0].name)
+    //     let result = await fetch("/presigned-url?filname=" + name)
+    //     result = await result.text();
+    //
+    //     fetch(result, {
+    //         method : 'PUT',
+    //         body : e.files[0]
+    //     })
+    // }
+</script>
+</body>
+</html>

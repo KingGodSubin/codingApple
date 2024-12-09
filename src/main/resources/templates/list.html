@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 경로를 / 부터 시작하면 static 폴더 파일들 사용 가능 -->
+    <link href="/main.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<!-- 별도의 파일에 저장해두고 한 줄로 import 해서 사용가능(th : fragment 문법) -->
+<!--<div class="nav">-->
+<!--    <a class="logo">SpringMall</a>-->
+<!--    <a>List</a>-->
+<!--    <a>Write</a>-->
+<!--</div>-->
+<div th:replace="~{ nav.html::navbar }"></div>
+
+<form id="searchForm">
+    <input name="searchText" style="display : inline">
+    <button id="searchBtn">검색</button>
+</form>
+<!--  th: thymeleaf 약자  -->
+<!-- th:each html 쉽게 복붙가능(반복문) -->
+<div id="replace">
+    <div class="card" th:each="item : ${items}">
+        <img th:src="${item.itemFilePath}">
+        <div>
+            <h4 th:text="${item.title}">바지</h4>
+            <a th:href="@{'/detail/' + ${item.id}}">링크</a>
+            <p th:text="${item.price} + 원">7억</p>
+            <a th:href="@{/edit/{itemId}(itemId=${item.id})}">✏️</a>
+            <!-- 자바스크립트에 Thymeleaf 변수 넣으려면 -->
+            <!-- .then() 붙이면 AJAX 요청 완료시 코드실행가능  -->
+            <!--        <span th:onclick="fetch('/item?itemId=[[${item.id}]]', {method : 'DELETE'})-->
+            <!--            .then(r => r.text())-->
+            <!--            .then(() => {-->
+            <!--                location.reload();-->
+            <!--            })-->
+            <!--        ">🗑️</span>-->
+            <button class="deleteItem" th:data-item-id="${item.id}">🗑️</button>
+        </div>
+    </div>
+</div>
+<div th:if="${totalPages != 0}">
+    <div class="pagination" th:each="page : ${#numbers.sequence(1, totalPages)}">
+        <button class="eachPage" th:text="${page}" th:data-page-idx="${page}"></button>
+    </div>
+</div>
+
+<script>
+
+    // document.querySelectorAll('.btn')[0].addEventListener("click", function () {
+    //     fetch('/test1', {  // 여기 url로
+    //         method : 'post', // POST 요청이 날라가는데
+    //         headers : { 'Content-Type' : 'application/json' }, // json 데이터를 보내겠다
+    //         body : JSON.stringify({name : 'kim'}) // 이 데이터를 들고 날라감
+    //         // stringify 문자로 변환해주는 함수
+    //     })
+    // })
+
+    // 초기화 시 이벤트 바인딩
+    $(document).ready(function () {
+        bindDeleteButton();
+        bindPaginationButton();
+        search();
+    });
+
+    // 삭제 버튼 클릭 시
+    function bindDeleteButton() {
+        $('.deleteItem').each(function () {
+            var itemId = $(this).data("item-id");
+            var thisParents = $(this).closest(".card");
+            $(this).click(function () {
+                console.log(itemId + "클릭");
+                $.ajax({
+                    // /delete로 가라
+                    url: "/delete",
+                    // method는 GET 방식(query string)
+                    method: "GET",
+                    // data는 itemid라는 이름으로 들고 가라
+                    data: {itemId: itemId},
+                    // 성공했을땐?
+                    success: function () {
+                        thisParents.remove();
+                    },
+                    // 실패했을땐?
+                    fail: function () {
+                        console.log("실패");
+                    }
+                })
+            });
+        });
+    }
+
+    // 페이지네이션 버튼 클릭 이벤트
+    function bindPaginationButton() {
+        $(".eachPage").each(function () {
+            var searchText = $('input[name="searchText"]').val();
+            var pageIdx = $(this).data("page-idx");
+            $(this).click(function () {
+                $.ajax({
+                    url: "/list",
+                    method: "GET",
+                    data: {pageIdx: pageIdx, searchText: searchText},
+                    success: function (data) {
+                        var data = $.parseHTML(data);
+                        var dataHtml = $("<div>").append(data);
+                        $("#replace").replaceWith(dataHtml.find("#replace"));
+                        // 페이지네이션 버튼 클릭 이벤트 재바인딩
+                        bindDeleteButton();
+                        bindPaginationButton();
+                    }
+                })
+            })
+        });
+    }
+
+    function search() {
+        $("#searchBtn").click(function (e) {
+            e.preventDefault();
+            var searchText = $('input[name="searchText"]').val();
+            $.ajax({
+                url: "/list",
+                method: "GET",
+                data: {searchText: searchText},
+                success: function (data) {
+                    var data = $.parseHTML(data);
+                    var dataHtml = $("<div>").append(data);
+                    $("#replace").replaceWith(dataHtml.find("#replace"));
+                    // 페이지네이션 버튼 클릭 이벤트 재바인딩
+                    bindDeleteButton();
+                    bindPaginationButton();
+                }
+            })
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+plugins {
+	// 스프링부트 버전
+	id 'java'
+	id 'org.springframework.boot' version '3.3.4'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+// 회사 이름이랑 프로젝트 버전
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		// 자바 버전은 뭐야		 
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	// 외부 라이브러리 가져오는 곳
+	mavenCentral()
+}
+
+// 설치할 외부 라이브러리
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// thymeleaf 설치
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	// mysql 접속 도와주는 라이브러리
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	// ORM 라이브러리
+	// 원래 RDBMS는 데이터 입출력시 SQL 써야함
+	// 이게 귀찮고 어려워해서 ORM 씀
+	// 장점 : Java 코드로 데이터 입출력 가능, 뽑은 데이터 타입체크도 편함, 데이터를 Java 스타일로 관리 가능
+	// 단점 : 입출력 속도 저하
+	// JPA : Java의 ORM 표준 문법
+	// Hibernate : JPA를 쓰기좋게 구현한거
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	// spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+	// session 방식 DB 저장
+	// implementation 'org.springframework.session:spring-session-jdbc'
+	// AWS S3 라이브러리 설치
+//	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
