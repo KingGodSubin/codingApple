@@ -20,10 +20,14 @@ public class Sales {
     private String itemName;
     private Integer price;
     private Integer count;
+
     // 외래키
-    @ManyToOne
+    // EAGER : 이거 필요없어도 미리 가져와주쇼
+    // LAZY : 필요할 때 가져와주쇼
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
+
     @CreationTimestamp // 행 추가할 때 현재시간 자동으로 채워짐
     private LocalDateTime created;
 }

@@ -44,10 +44,10 @@
             <button class="deleteItem" th:data-item-id="${item.id}">🗑️</button>
         </div>
     </div>
-</div>
-<div th:if="${totalPages != 0}">
-    <div class="pagination" th:each="page : ${#numbers.sequence(1, totalPages)}">
-        <button class="eachPage" th:text="${page}" th:data-page-idx="${page}"></button>
+    <div th:if="${totalPages != 0}">
+        <div class="pagination" th:each="page : ${#numbers.sequence(1, totalPages)}">
+            <button class="eachPage" th:text="${page}" th:data-page-idx="${page}"></button>
+        </div>
     </div>
 </div>
 
@@ -64,63 +64,55 @@
 
     // 초기화 시 이벤트 바인딩
     $(document).ready(function () {
-        bindDeleteButton();
-        bindPaginationButton();
+        deleteItem();
+        nextPage();
         search();
     });
 
     // 삭제 버튼 클릭 시
-    function bindDeleteButton() {
-        $('.deleteItem').each(function () {
+    function deleteItem() {
+        $(document).on('click', '.deleteItem', function () {
             var itemId = $(this).data("item-id");
             var thisParents = $(this).closest(".card");
-            $(this).click(function () {
-                console.log(itemId + "클릭");
-                $.ajax({
-                    // /delete로 가라
-                    url: "/delete",
-                    // method는 GET 방식(query string)
-                    method: "GET",
-                    // data는 itemid라는 이름으로 들고 가라
-                    data: {itemId: itemId},
-                    // 성공했을땐?
-                    success: function () {
-                        thisParents.remove();
-                    },
-                    // 실패했을땐?
-                    fail: function () {
-                        console.log("실패");
-                    }
-                })
-            });
-        });
+            $.ajax({
+                // url은 /delete로
+                url: "/delete",
+                // method는 GET 방식으로
+                method: "GET",
+                // data는 저런걸 들고 가라
+                data: {itemId: itemId},
+                // 성공했으면 그 아이템 삭제
+                success: function () {
+                    thisParents.remove();
+                },
+                fail: function () {
+                    console.log("삭제 실패")
+                }
+            })
+        })
     }
 
     // 페이지네이션 버튼 클릭 이벤트
-    function bindPaginationButton() {
-        $(".eachPage").each(function () {
+    function nextPage() {
+        $(document).on('click', '.eachPage', function () {
             var searchText = $('input[name="searchText"]').val();
             var pageIdx = $(this).data("page-idx");
-            $(this).click(function () {
-                $.ajax({
-                    url: "/list",
-                    method: "GET",
-                    data: {pageIdx: pageIdx, searchText: searchText},
-                    success: function (data) {
-                        var data = $.parseHTML(data);
-                        var dataHtml = $("<div>").append(data);
-                        $("#replace").replaceWith(dataHtml.find("#replace"));
-                        // 페이지네이션 버튼 클릭 이벤트 재바인딩
-                        bindDeleteButton();
-                        bindPaginationButton();
-                    }
-                })
+            $.ajax({
+                url: "/list",
+                method: "GET",
+                data: {pageIdx: pageIdx, searchText: searchText},
+                // 성공시 서버에서의 return 값이 data에 들어감
+                success: function (data) {
+                    var data = $.parseHTML(data);
+                    var dataHtml = $("<div>").append(data);
+                    $("#replace").replaceWith(dataHtml.find("#replace"));
+                }
             })
-        });
+        })
     }
 
     function search() {
-        $("#searchBtn").click(function (e) {
+        $(document).on('click', '#searchBtn', function (e) {
             e.preventDefault();
             var searchText = $('input[name="searchText"]').val();
             $.ajax({
@@ -131,9 +123,6 @@
                     var data = $.parseHTML(data);
                     var dataHtml = $("<div>").append(data);
                     $("#replace").replaceWith(dataHtml.find("#replace"));
-                    // 페이지네이션 버튼 클릭 이벤트 재바인딩
-                    bindDeleteButton();
-                    bindPaginationButton();
                 }
             })
         })

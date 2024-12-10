@@ -40,8 +40,6 @@ public class ItemController {
     // 이걸 API 라고 하는것 같음
     @GetMapping("/list")
     public String list(Model model, Integer pageIdx, String searchText) {
-        System.out.println(pageIdx);
-        System.out.println(searchText);
         if(pageIdx == null){
             pageIdx = 1;
         }

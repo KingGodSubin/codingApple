@@ -1,6 +1,7 @@
 package com.example.shop.sales;
 
 import com.example.shop.member.CustomUser;
+import com.example.shop.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ public class SalesController {
         sales.setPrice(price);
         sales.setCount(count);
         CustomUser user = (CustomUser) auth.getPrincipal();
+        var member = new Member();
+        member.setId(user.id);
+        sales.setMember(member);
         salesRepository.save(sales);
         return "";
     }
@@ -31,8 +35,23 @@ public class SalesController {
     @GetMapping("/order/all")
     @ResponseBody
     String getOrderAll(){
-        List<Sales> orders = salesRepository.findAll();
-        System.out.println(orders.get(0));
+        List<Sales> orders = salesRepository.customFindAll();
+        System.out.println(orders);
+        SalesDTO salesDTO = new SalesDTO();
+        salesDTO.itemName = orders.get(0).getItemName();
+        salesDTO.price = orders.get(0).getPrice();
+        salesDTO.username = orders.get(0).getMember().getUsername();
         return "";
     }
+
+    // @ManyToOne 단점
+    // select 쿼리문 많이 실행될 수 있음
+    // - JOIN 문법으로 해결가능
+    // 모든컬럼 다 가져와서 귀찮음
+}
+
+class SalesDTO {
+    public String itemName;
+    public Integer price;
+    public String username;
 }
