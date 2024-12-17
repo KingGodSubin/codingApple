@@ -44,8 +44,8 @@
             <button class="deleteItem" th:data-item-id="${item.id}">🗑️</button>
         </div>
     </div>
-    <div th:if="${totalPages != 0}">
-        <div class="pagination" th:each="page : ${#numbers.sequence(1, totalPages)}">
+    <div th:if="${totalPages != 0}" style="display : flex">
+        <div class="pagination" th:each="page : ${#numbers.sequence(1, totalPages)}" style="margin: 2px">
             <button class="eachPage" th:text="${page}" th:data-page-idx="${page}"></button>
         </div>
     </div>
